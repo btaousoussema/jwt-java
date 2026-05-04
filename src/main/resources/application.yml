@@ -1,0 +1,4 @@
+app:
+  name: MyApp
+secret:
+  key: applicationProductionNotTest
