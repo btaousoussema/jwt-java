@@ -2,3 +2,25 @@ app:
   name: MyApp
 secret:
   key: applicationProductionNotTest
+
+spring:
+  kafka:
+    bootstrap-servers: localhost:9092
+    producer:
+      key-serializer: org.apache.kafka.common.serialization.StringSerializer
+      value-serializer: org.apache.kafka.common.serialization.StringSerializer
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: ouss
+    password: password
+  data:
+    redis:
+      host: localhost
+      port: 6379
+
+logging:
+  level:
+    org.springframework.kafka: DEBUG
+    org.springframework.boot.autoconfigure: DEBUG
+

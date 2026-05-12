@@ -3,7 +3,6 @@ package com.ouss.web.controller;
 import com.ouss.web.doa.ContactDOA;
 import com.ouss.web.model.Contact;
 import com.ouss.web.service.TokenService;
-import com.ouss.web.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -32,7 +31,7 @@ public class NameController {
         }
     }
 
-    @PostMapping("/add")
+    @PostMapping("/create")
     public ResponseEntity<Contact> addName(@RequestHeader("Authorization") String token,
             @RequestParam("firstName") String firstName,
             @RequestParam("lastName") String lastName

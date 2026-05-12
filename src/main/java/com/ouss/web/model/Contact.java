@@ -1,10 +1,12 @@
 package com.ouss.web.model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 
 @Getter
 @Setter
+@Data
 public class Contact {
     public Contact(int id, String firstName, String lastName) {
         this.firstName = firstName;

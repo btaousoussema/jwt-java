@@ -1,17 +1,22 @@
 package com.ouss.web.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import jakarta.persistence.*;
+import lombok.*;
 
-@Getter
-@Setter
-public class User {
+import java.io.Serializable;
+
+@NoArgsConstructor
+@AllArgsConstructor
+@Data
+@Table(name="users")
+@Entity
+public class User implements Serializable {
+    @Id
+    @GeneratedValue(strategy = GenerationType.AUTO)
     private String id;
     private String email;
     private String password;
     private String token;
-
-    public User(){};
 
     public User(String id, String email, String password) {
         this.id = id;

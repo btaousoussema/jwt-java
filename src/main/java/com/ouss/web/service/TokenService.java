@@ -7,6 +7,7 @@ import com.auth0.jwt.interfaces.DecodedJWT;
 import com.ouss.web.config.SecretConfig;
 import com.ouss.web.model.User;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Service;
 
 import java.util.Date;
@@ -22,9 +23,18 @@ public class TokenService {
         Algorithm algorithm = Algorithm.HMAC256(secretConfig.getKey());
         return JWT.create()
             .withIssuer("auth0")
-            .withSubject(user.getId())
+            .withSubject(user.getEmail())
             .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
             .sign(algorithm);
+    }
+
+    public String generateToken(Authentication authentication){
+        Algorithm algorithm = Algorithm.HMAC256(secretConfig.getKey());
+        return JWT.create()
+                .withIssuer("auth0")
+                .withSubject(authentication.getName())
+                .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
+                .sign(algorithm);
     }
 
     public String validateToken(String token) {

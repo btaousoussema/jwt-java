@@ -2,12 +2,19 @@ package com.ouss.web.doa;
 
 import com.ouss.web.model.Contact;
 import com.ouss.web.util.DatabaseConnection;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.stereotype.Repository;
 
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
+@Repository
 public class ContactDOA {
+
+    @Autowired
+    RedisTemplate  redisTemplate;
 
     public List<Contact> getAllNames() {
         try{
