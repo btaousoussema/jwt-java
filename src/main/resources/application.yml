@@ -2,6 +2,8 @@ app:
   name: MyApp
 secret:
   key: applicationProductionNotTest
+redis:
+  active: false
 
 spring:
   kafka:
@@ -18,9 +20,3 @@ spring:
     redis:
       host: localhost
       port: 6379
-
-logging:
-  level:
-    org.springframework.kafka: DEBUG
-    org.springframework.boot.autoconfigure: DEBUG
-

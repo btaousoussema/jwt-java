@@ -1,8 +1,5 @@
 package com.ouss.web.util;
 
-import com.ouss.web.config.DatabaseConfig;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -13,18 +10,6 @@ import java.sql.SQLException;
 public class DatabaseConnection {
     private static Connection con = null;
 
-
-    /*@Value("${DB_USER}")
-    private static String dbUser;
-    @Value("${DB_PASSWORd}")
-    private static String dbPassword;
-    @Value("${DB_NAME}")
-    private static String dbName;
-    @Value("${DB_URL}")
-    private static String dbUrl;*/
-    /*@Autowired
-    private static DatabaseConfig databaseConfig;*/
-
     static
     {
         String dbUser = System.getenv("DB_USER");
@@ -34,9 +19,11 @@ public class DatabaseConnection {
         if(dbUser == null || dbPassword == null || dbUrl.isEmpty() || dbPassword.isEmpty()) {
             System.err.println("Error: No database connection possible.");
         }
-        String jdbc = "jdbc:postgresql://" + dbUrl + ":5432/" + dbName;
+        //String jdbc = "jdbc:postgresql://" + dbUrl + ":5432/" + dbName;
+        String jdbc = "jdbc:postgresql://localhost:5432/Web" ;
         try {
-            con = DriverManager.getConnection(jdbc, dbUser, dbPassword);
+            //con = DriverManager.getConnection(jdbc, dbUser, dbPassword);
+            con = DriverManager.getConnection(jdbc, "ouss", "password");
         }
         catch (SQLException e) {
             e.printStackTrace();

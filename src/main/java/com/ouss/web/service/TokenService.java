@@ -20,12 +20,16 @@ public class TokenService {
 
 
     public String generateToken(User user){
+        return generateToken(user.getId(), 0);
+    }
+
+    public String generateToken(String userId, int time){
         Algorithm algorithm = Algorithm.HMAC256(secretConfig.getKey());
         return JWT.create()
-            .withIssuer("auth0")
-            .withSubject(user.getEmail())
-            .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
-            .sign(algorithm);
+                .withIssuer("auth0")
+                .withSubject(userId)
+                .withExpiresAt(new Date(System.currentTimeMillis() + time))
+                .sign(algorithm);
     }
 
     public String generateToken(Authentication authentication){
@@ -33,19 +37,7 @@ public class TokenService {
         return JWT.create()
                 .withIssuer("auth0")
                 .withSubject(authentication.getName())
-                .withExpiresAt(new Date(System.currentTimeMillis() + 3600000))
+                .withExpiresAt(new Date(System.currentTimeMillis()))
                 .sign(algorithm);
-    }
-
-    public String validateToken(String token) {
-        JWTVerifier verifier = JWT.require(Algorithm.HMAC256(secretConfig.getKey()))
-                .withIssuer("auth0")
-                .build();
-        DecodedJWT decodedJWT = verifier.verify(token);
-        System.out.println("Token verified : " + decodedJWT.toString());
-        if(decodedJWT != null){
-            return decodedJWT.getSubject();
-        }
-        return null;
     }
 }

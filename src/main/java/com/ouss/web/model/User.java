@@ -16,12 +16,17 @@ public class User implements Serializable {
     private String id;
     private String email;
     private String password;
-    private String token;
+    private String accessToken;
 
     public User(String id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;
+    }
+
+    public User(String email, String accessToken) {
+        this.email = email;
+        this.accessToken = accessToken;
     }
 
     public User(String email) {

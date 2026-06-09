@@ -37,24 +37,27 @@ public class CustomUserDetailsService implements UserDetailsService {
         return user;
     }
 
-    public String authenticateUser(User userrequest) {
-        User user = userDOA.getUser(userrequest.getEmail());
-        if(user == null){
-            logger.error("User for " +  user.getEmail()  + " not found.");
-            return "";
-        }
-        boolean isAuthenticated = encoder.matches(userrequest.getPassword(), user.getPassword());
-        if(isAuthenticated) {
-            userrequest.setId(user.getId());
-            return tokenService.generateToken(user);
-        }
-        logger.error("User not authenticated: " +  user.getEmail());
-        return "";
-    }
+//    public String authenticateUser(User userrequest) {
+//        User user = userDOA.getUser(userrequest.getEmail());
+//        if(user == null){
+//            logger.error("User for " +  user.getEmail()  + " not found.");
+//            return "";
+//        }
+//        boolean isAuthenticated = encoder.matches(userrequest.getPassword(), user.getPassword());
+//        if(isAuthenticated) {
+//            userrequest.setId(user.getId());
+//            return tokenService.generateToken(user);
+//        }
+//        logger.error("User not authenticated: " +  user.getEmail());
+//        return "";
+//    }
 
     @Override
-    public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {
-        var user = userDOA.getUser(email);
+    public UserDetails loadUserByUsername(String identifiant) throws UsernameNotFoundException {
+        var user = userDOA.getUser(identifiant);
+        if(user == null){
+            user = userDOA.getUserFromId(identifiant);
+        }
 
         return org.springframework.security.core.userdetails.User
                 .withUsername(user.getEmail())

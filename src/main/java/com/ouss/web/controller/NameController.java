@@ -2,6 +2,7 @@ package com.ouss.web.controller;
 
 import com.ouss.web.doa.ContactDOA;
 import com.ouss.web.model.Contact;
+import com.ouss.web.service.ContactService;
 import com.ouss.web.service.TokenService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -11,37 +12,31 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin
+@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/contacts")
 public class NameController {
 
     @Autowired
     TokenService tokenService;
 
-    @GetMapping("/get")
-    public ResponseEntity<List<Contact>> getAllNames(@RequestHeader("Authorization") String token) {
-        token = token.replace("Bearer ", "").strip();
-        String id = tokenService.validateToken(token);
-        if(id == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        } else {
-            ContactDOA contactDOA = new ContactDOA();
-            List<Contact> ct = contactDOA.getAllNames();
-            return new ResponseEntity<>(ct, HttpStatus.OK);
-        }
+    @Autowired
+    ContactService contactService;
+
+    @GetMapping("/{id}")
+    public ResponseEntity<Contact> getAllNamesWithToken(@PathVariable String id) {
+        Contact contact = contactService.getContact(id);
+        return new ResponseEntity<>(contact, HttpStatus.OK);
     }
 
-    @PostMapping("/create")
-    public ResponseEntity<Contact> addName(@RequestHeader("Authorization") String token,
-            @RequestParam("firstName") String firstName,
-            @RequestParam("lastName") String lastName
-            ) {
-        token = token.replace("Bearer ", "").strip();
-        String id = tokenService.validateToken(token);
-        if(id == null) {
-            return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
-        }
-        ContactDOA db = new ContactDOA();
-        return new ResponseEntity<>(db.addName(firstName, lastName), HttpStatus.OK);
+    @GetMapping
+    public ResponseEntity<List<Contact>> getAllNames(@CookieValue("refreshToken") String refreshToken) {
+        List<Contact> contacts = contactService.getContacts();
+        return new ResponseEntity<>(contacts, HttpStatus.OK);
+    }
+
+    @PostMapping
+    public ResponseEntity<Contact> addName(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+        var contact = contactService.addContact(new Contact(firstName, lastName));
+        return new ResponseEntity<>(contact, HttpStatus.OK);
     }
 }
