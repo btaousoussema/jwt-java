@@ -8,7 +8,7 @@ import java.sql.SQLException;
 
 @Component
 public class DatabaseConnection {
-    private static Connection con = null;
+    private static Connection connection = null;
 
     static
     {
@@ -19,11 +19,9 @@ public class DatabaseConnection {
         if(dbUser == null || dbPassword == null || dbUrl.isEmpty() || dbPassword.isEmpty()) {
             System.err.println("Error: No database connection possible.");
         }
-        //String jdbc = "jdbc:postgresql://" + dbUrl + ":5432/" + dbName;
-        String jdbc = "jdbc:postgresql://localhost:5432/Web" ;
+        String jdbc = "jdbc:postgresql://" + dbUrl + ":5432/" + dbName;
         try {
-            //con = DriverManager.getConnection(jdbc, dbUser, dbPassword);
-            con = DriverManager.getConnection(jdbc, "ouss", "password");
+            connection = DriverManager.getConnection(jdbc, dbUser, dbPassword);
         }
         catch (SQLException e) {
             e.printStackTrace();
@@ -31,6 +29,6 @@ public class DatabaseConnection {
     }
     public static Connection getConnection()
     {
-        return con;
+        return connection;
     }
 }
