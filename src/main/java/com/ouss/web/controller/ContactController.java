@@ -1,6 +1,5 @@
 package com.ouss.web.controller;
 
-import com.ouss.web.doa.ContactDOA;
 import com.ouss.web.model.Contact;
 import com.ouss.web.service.ContactService;
 import com.ouss.web.service.TokenService;
@@ -14,10 +13,7 @@ import java.util.List;
 @RestController
 @CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/contacts")
-public class NameController {
-
-    @Autowired
-    TokenService tokenService;
+public class ContactController {
 
     @Autowired
     ContactService contactService;
@@ -29,8 +25,8 @@ public class NameController {
     }
 
     @GetMapping
-    public ResponseEntity<List<Contact>> getAllNames(@CookieValue("refreshToken") String refreshToken) {
-        List<Contact> contacts = contactService.getContacts();
+    public ResponseEntity<List<Contact>> getAllContacts() {
+        List<Contact> contacts = contactService.getAllContacts();
         return new ResponseEntity<>(contacts, HttpStatus.OK);
     }
 

@@ -7,18 +7,19 @@ import java.io.Serializable;
 
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 @Data
 @Table(name="users")
 @Entity
 public class User implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
-    private String id;
+    private int id;
     private String email;
     private String password;
     private String accessToken;
 
-    public User(String id, String email, String password) {
+    public User(int id, String email, String password) {
         this.id = id;
         this.email = email;
         this.password = password;

@@ -1,9 +1,8 @@
 package com.ouss.web.service;
 
 import com.ouss.web.config.SecretConfig;
-import com.ouss.web.doa.RefreshTokenDOA;
-import com.ouss.web.model.RefreshToken;
-import com.ouss.web.model.User;
+import com.ouss.web.repository.RefreshTokenJpaRepo;
+import com.ouss.web.model.Refresh_Token;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -14,48 +13,61 @@ import java.util.UUID;
 public class RefreshTokenService {
 
     @Autowired
-    private RefreshTokenDOA refreshTokenDOA;
+    private RefreshTokenJpaRepo refreshTokenRepo;
 
     @Autowired
     SecretConfig secretConfig;
 
-    public RefreshToken validateRefreshToken(String token) {
-        RefreshToken refreshToken = refreshTokenDOA.getRefreshToken(token);
+    public Refresh_Token validateRefreshToken(String token) {
+        Refresh_Token refreshToken = refreshTokenRepo.findByRefreshToken(token).orElse(null);
         if(refreshToken == null) {
             return null;
         }
 
         if(!refreshToken.isActive()) {
-            refreshTokenDOA.invalidateAllRefreshToken(refreshToken.getUserId());
+            refreshTokenRepo.getReferenceById(refreshToken.getId()).setActive(false);
+            //refreshTokenRepo.invalidateAllRefreshToken(refreshToken.getUserId());
             return null;
         }
 
         if(refreshToken.getExpires_in().after(new Date(System.currentTimeMillis()))) {
-            refreshTokenDOA.invalidateRefreshToken(token);
+            refreshTokenRepo.getReferenceById(refreshToken.getId()).setActive(false);
+            //refreshTokenRepo.invalidateRefreshToken(token);
             return generateRefreshToken(refreshToken.getUserId());
         }
         return refreshToken;
     }
 
     public void invalidateToken(String token) {
-        refreshTokenDOA.invalidateRefreshToken(token);
+        var refreshToken = refreshTokenRepo.findByRefreshToken(token);
+        if(refreshToken.isPresent()) {
+            refreshToken.get().setActive(false);
+            //refreshTokenRepo.delete(refreshToken);
+        }
     }
 
     public String generateToken(String userId) {
-        String refreshToken = UUID.randomUUID().toString();
-        refreshTokenDOA.createRefreshToken(userId, refreshToken);
-        return refreshToken;
-    }
-
-    public RefreshToken generateRefreshToken(String userId) {
         String token = UUID.randomUUID().toString();
-        RefreshToken refreshToken = new RefreshToken();
+        final var refreshToken = Refresh_Token.builder()
+                .userId(userId)
+                .refreshToken(token)
+                .active(true)
+                .build();
+        refreshTokenRepo.save(refreshToken);
+        return token;
+    }
+
+    public Refresh_Token generateRefreshToken(String userId) {
+        String token = UUID.randomUUID().toString();
+        Refresh_Token refreshToken = new Refresh_Token();
         refreshToken.setRefreshToken(token);
-        refreshTokenDOA.createRefreshToken(userId, token);
+        refreshToken.setUserId(userId);
+        refreshToken.setActive(true);
+        refreshTokenRepo.save(refreshToken);
         return refreshToken;
     }
 
-    public RefreshToken getRefreshToken(String refreshToken) {
-        return refreshTokenDOA.getRefreshToken(refreshToken);
+    public Refresh_Token getRefreshToken(String refreshToken) {
+        return refreshTokenRepo.findByRefreshToken(refreshToken).orElse(null);
     }
 }

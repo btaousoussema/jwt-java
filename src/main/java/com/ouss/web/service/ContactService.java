@@ -1,6 +1,6 @@
 package com.ouss.web.service;
 
-import com.ouss.web.doa.ContactDOA;
+import com.ouss.web.repository.ContactJpaRepo;
 import com.ouss.web.model.Contact;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -10,18 +10,22 @@ import java.util.List;
 @Service
 public class ContactService {
 
-    @Autowired
-    ContactDOA contactDOA;
+    /*@Autowired
+    ContactRepo contactRepo;*/
 
-    public List<Contact> getContacts() {
-        return contactDOA.getAllContacts();
+    @Autowired
+    ContactJpaRepo contactJpaRepo;
+
+    public List<Contact> getAllContacts() {
+        //return contactRepo.getAllContacts();
+        return contactJpaRepo.findAll();
     }
 
     public Contact getContact(String id) {
-        return contactDOA.getContact(id);
+        return contactJpaRepo.getReferenceById(Integer.parseInt(id));
     }
 
     public Contact addContact(Contact contact) {
-        return contactDOA.addContact(contact);
+        return contactJpaRepo.save(contact);
     }
 }

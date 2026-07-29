@@ -1,7 +1,8 @@
 package com.ouss.web.controller;
 
-import com.ouss.web.doa.UserDOA;
-import com.ouss.web.model.RefreshToken;
+import com.google.gson.Gson;
+import com.ouss.web.repository.UserDOA;
+import com.ouss.web.model.Refresh_Token;
 import com.ouss.web.model.User;
 import com.ouss.web.service.RefreshTokenService;
 import com.ouss.web.service.TokenService;
@@ -40,20 +41,21 @@ public class AuthController {
     AuthenticationManager authenticationManager;
 
     @PostMapping("/login")
-    public ResponseEntity<User> authenticateUser(@RequestBody User user) {
+    public ResponseEntity<String> authenticateUser(@RequestBody User user) {
         Authentication authentication = authenticationManager.authenticate
                 (new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-        var usersa = new User();
         User userFound = userDOA.getUser(user.getEmail());
-        usersa.setAccessToken(tokenService.generateToken(authentication));
-        String refreshToken = refreshTokenService.generateToken(userFound.getId());
+        userFound.setAccessToken(tokenService.generateToken(authentication));
+        String refreshToken = refreshTokenService.generateToken(String.valueOf(userFound.getId()));
+        userFound.setPassword("");
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .path("/")
                 .sameSite("Lax")
                 .build();
         HttpHeaders headers = new HttpHeaders(MultiValueMap.fromSingleValue(Map.of(HttpHeaders.SET_COOKIE, cookie.toString())));
-        return new ResponseEntity<>(usersa, headers, HttpStatus.OK);
+        final var gson = new Gson();
+        return new ResponseEntity<>(gson.toJson(userFound), headers, HttpStatus.OK);
     }
 
     @PostMapping("/logout")
@@ -75,13 +77,13 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        RefreshToken oldRefreshToken = refreshTokenService.getRefreshToken(refreshToken);
+        Refresh_Token oldRefreshToken = refreshTokenService.getRefreshToken(refreshToken);
 
         if(oldRefreshToken == null ||  oldRefreshToken.getRefreshToken().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        RefreshToken newRefreshToken = refreshTokenService.validateRefreshToken(refreshToken);
+        Refresh_Token newRefreshToken = refreshTokenService.validateRefreshToken(refreshToken);
 
         if(newRefreshToken == null || newRefreshToken.getRefreshToken().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

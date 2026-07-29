@@ -19,9 +19,9 @@ public class TokenService {
     SecretConfig secretConfig;
 
 
-    public String generateToken(User user){
-        return generateToken(user.getId(), 0);
-    }
+    /*public String generateToken(User user){
+        return generateToken(String.valueOf(user.getId()), 0);
+    }*/
 
     public String generateToken(String userId, int time){
         Algorithm algorithm = Algorithm.HMAC256(secretConfig.getKey());
@@ -37,7 +37,7 @@ public class TokenService {
         return JWT.create()
                 .withIssuer("auth0")
                 .withSubject(authentication.getName())
-                .withExpiresAt(new Date(System.currentTimeMillis()))
+                .withExpiresAt(new Date(System.currentTimeMillis() + 30000))
                 .sign(algorithm);
     }
 }

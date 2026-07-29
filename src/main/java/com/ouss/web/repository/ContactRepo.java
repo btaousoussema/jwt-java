@@ -1,6 +1,5 @@
-package com.ouss.web.doa;
+package com.ouss.web.repository;
 
-import com.ouss.web.controller.UserController;
 import com.ouss.web.model.Contact;
 import com.ouss.web.util.DatabaseConnection;
 import org.slf4j.Logger;
@@ -14,12 +13,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Repository
-public class ContactDOA {
+public class ContactRepo {
 
     @Autowired
     RedisTemplate  redisTemplate;
 
-    Logger logger = LoggerFactory.getLogger(ContactDOA.class);
+    Logger logger = LoggerFactory.getLogger(ContactRepo.class);
 
     public List<Contact> getAllContacts() {
         try{

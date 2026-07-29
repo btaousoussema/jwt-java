@@ -1,7 +1,6 @@
-package com.ouss.web.doa;
+package com.ouss.web.repository;
 
-import com.ouss.web.model.Contact;
-import com.ouss.web.model.RefreshToken;
+import com.ouss.web.model.Refresh_Token;
 import com.ouss.web.model.User;
 import com.ouss.web.util.DatabaseConnection;
 import org.slf4j.Logger;
@@ -15,9 +14,9 @@ import java.util.Date;
 import java.util.Locale;
 
 @Repository
-public class RefreshTokenDOA {
+public class RefreshTokenRepo {
 
-    Logger logger = LoggerFactory.getLogger(RefreshTokenDOA.class);
+    Logger logger = LoggerFactory.getLogger(RefreshTokenRepo.class);
 
     public void createRefreshToken(String userId, String refreshToken) {
         try {
@@ -52,7 +51,7 @@ public class RefreshTokenDOA {
         return null;
     }
 
-    public RefreshToken getRefreshToken(String token) {
+    public Refresh_Token getRefreshToken(String token) {
         try {
             Connection conn = DatabaseConnection.getConnection();
             String sql = "SELECT * FROM refresh_token WHERE token = ? and active = true";
@@ -63,7 +62,7 @@ public class RefreshTokenDOA {
 
             if(stmt.getResultSet().next()) {
                 try {
-                    RefreshToken refreshToken = new RefreshToken(stmt.getResultSet().getString(1), stmt.getResultSet().getString(2), stmt.getResultSet().getString(3),
+                    Refresh_Token refreshToken = new Refresh_Token(stmt.getResultSet().getInt(1), stmt.getResultSet().getString(2), stmt.getResultSet().getString(3),
                            formatter.parse(stmt.getResultSet().getString(4)), stmt.getResultSet().getBoolean(5));
                     return refreshToken;
                 } catch (ParseException e) {
@@ -87,7 +86,7 @@ public class RefreshTokenDOA {
 
             if(stmt.getResultSet().next()) {
                 User user = new User();
-                user.setId(stmt.getResultSet().getString(1));
+                user.setId(stmt.getResultSet().getInt(1));
                 return user;
             }
         } catch (SQLException e) {

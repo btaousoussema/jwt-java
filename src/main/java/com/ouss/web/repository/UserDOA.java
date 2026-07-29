@@ -1,4 +1,4 @@
-package com.ouss.web.doa;
+package com.ouss.web.repository;
 
 import com.ouss.web.config.RedisConfig;
 import com.ouss.web.model.User;
@@ -23,7 +23,7 @@ public class UserDOA {
     @Autowired
     private RedisConfig redisConfig;
 
-    Logger logger = LoggerFactory.getLogger(RefreshTokenDOA.class);
+    Logger logger = LoggerFactory.getLogger(UserDOA.class);
 
 
     public User createUser(String email, String password) {
@@ -69,7 +69,7 @@ public class UserDOA {
                 }
             }
             if(stmt.getResultSet().next()) {
-                user = new User(stmt.getResultSet().getString(1), stmt.getResultSet().getString(2), stmt.getResultSet().getString(3));
+                user = new User(Integer.parseInt(stmt.getResultSet().getString(1)), stmt.getResultSet().getString(2), stmt.getResultSet().getString(3));
                 return user;
             }
             return null;
@@ -108,7 +108,7 @@ public class UserDOA {
 
             stmt.execute();
             if(stmt.getResultSet().next()) {
-                var user = new User(String.valueOf(stmt.getResultSet().getInt(1)),
+                var user = new User(stmt.getResultSet().getInt(1),
                         stmt.getResultSet().getString(2), stmt.getResultSet().getString(3));
                 user.setEmail(stmt.getResultSet().getString(1));
                 return user;

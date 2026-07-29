@@ -20,3 +20,12 @@ spring:
     redis:
       host: localhost
       port: 6379
+  datasource:
+    url: ${DB_URL:jdbc:postgresql://localhost:5432/Web}
+    username: ${DB_USER:ouss}
+    password: ${DB_PASSWORD:password}
+  jpa:
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+        ddl-auto: update

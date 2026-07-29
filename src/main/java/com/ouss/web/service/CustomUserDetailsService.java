@@ -1,7 +1,7 @@
 package com.ouss.web.service;
 
 import com.ouss.web.model.User;
-import com.ouss.web.doa.UserDOA;
+import com.ouss.web.repository.UserDOA;
 import com.ouss.web.service.queue.MessageService;
 import lombok.extern.slf4j.Slf4j;
 import org.slf4j.Logger;
