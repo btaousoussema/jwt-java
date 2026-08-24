@@ -13,20 +13,13 @@ import org.springframework.web.bind.annotation.*;
 import java.util.Map;
 
 @RestController
-@CrossOrigin(value = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/user")
 public class UserController {
 
     @Autowired
     private CustomUserDetailsService customUserDetailsService;
 
-    @Autowired
-    RefreshTokenService refreshTokenService;
-
-
-
     Logger logger = LoggerFactory.getLogger(UserController.class);
-
 
     @PostMapping
     public ResponseEntity<User> createUser(@RequestBody User user){

@@ -4,8 +4,6 @@ import com.ouss.web.model.User;
 import com.ouss.web.repository.UserDOA;
 import com.ouss.web.service.queue.MessageService;
 import lombok.extern.slf4j.Slf4j;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -26,31 +24,13 @@ public class CustomUserDetailsService implements UserDetailsService {
     @Autowired
     MessageService messageService;
 
-    Logger logger = LoggerFactory.getLogger(CustomUserDetailsService.class);
-
-
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();
 
     public User createUser(String email, String password) {
         User user = userDOA.createUser(email, encoder.encode(password));
-        messageService.sendAccountCreation(user.getEmail());
+        messageService.sendEmailAccountCreation(user.getEmail());
         return user;
     }
-
-//    public String authenticateUser(User userrequest) {
-//        User user = userDOA.getUser(userrequest.getEmail());
-//        if(user == null){
-//            logger.error("User for " +  user.getEmail()  + " not found.");
-//            return "";
-//        }
-//        boolean isAuthenticated = encoder.matches(userrequest.getPassword(), user.getPassword());
-//        if(isAuthenticated) {
-//            userrequest.setId(user.getId());
-//            return tokenService.generateToken(user);
-//        }
-//        logger.error("User not authenticated: " +  user.getEmail());
-//        return "";
-//    }
 
     @Override
     public UserDetails loadUserByUsername(String identifiant) throws UsernameNotFoundException {

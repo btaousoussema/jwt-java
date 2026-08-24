@@ -2,5 +2,5 @@ package com.ouss.web.service.queue;
 
 public interface MessageService {
 
-    void sendAccountCreation(String email);
+    void sendEmailAccountCreation(String email);
 }

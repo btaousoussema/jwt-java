@@ -11,7 +11,6 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@CrossOrigin(origins = "http://localhost:5173", allowCredentials = "true")
 @RequestMapping("/contacts")
 public class ContactController {
 
@@ -19,7 +18,7 @@ public class ContactController {
     ContactService contactService;
 
     @GetMapping("/{id}")
-    public ResponseEntity<Contact> getAllNamesWithToken(@PathVariable String id) {
+    public ResponseEntity<Contact> getContact(@PathVariable String id) {
         Contact contact = contactService.getContact(id);
         return new ResponseEntity<>(contact, HttpStatus.OK);
     }
@@ -31,7 +30,7 @@ public class ContactController {
     }
 
     @PostMapping
-    public ResponseEntity<Contact> addName(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
+    public ResponseEntity<Contact> addContact(@RequestParam("firstName") String firstName, @RequestParam("lastName") String lastName) {
         var contact = contactService.addContact(new Contact(firstName, lastName));
         return new ResponseEntity<>(contact, HttpStatus.OK);
     }

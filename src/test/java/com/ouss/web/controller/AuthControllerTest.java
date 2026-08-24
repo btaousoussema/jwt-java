@@ -4,10 +4,7 @@ import com.google.gson.Gson;
 import com.ouss.web.model.User;
 import com.ouss.web.repository.UserDOA;
 import com.ouss.web.security.AuthTokenFilter;
-import com.ouss.web.service.ContactService;
-import com.ouss.web.service.RefreshTokenService;
-import com.ouss.web.service.TokenService;
-import com.ouss.web.service.UserService;
+import com.ouss.web.service.*;
 import org.json.JSONObject;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
@@ -61,6 +58,9 @@ class AuthControllerTest {
     AuthTokenFilter authTokenFilter;
 
     @MockitoBean
+    AuthenticationService authenticationService;
+
+    @MockitoBean
     Gson gson;
 
     @Test
@@ -73,11 +73,10 @@ class AuthControllerTest {
         when(refreshTokenService.generateToken(anyString())).thenReturn(refreshToken);
 
         var user = new User(5, "ouss@gy.com", "bou");
-        when(userDOA.getUser(anyString())).thenReturn(user);
+        when(authenticationService.authenticateUser(any())).thenReturn(user);
 
         user.setAccessToken(accessToken);
 
-        user.setPassword("");
         final var localGson = new Gson();
         when(gson.toJson(any(User.class))).thenReturn(localGson.toJson(user));
 
@@ -99,13 +98,4 @@ class AuthControllerTest {
         Assertions.assertNotNull(response);
         Assertions.assertEquals(localGson.toJson(user), response);
     }
-/*
-    @Test
-    void logoutUser() {
-    }
-
-    @Test
-    void refreshToken() {
-    }
-*/
 }

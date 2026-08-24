@@ -12,7 +12,7 @@ import java.util.Date;
 @NoArgsConstructor
 @Setter
 @Table(name="refresh_token")
-public class Refresh_Token {
+public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;

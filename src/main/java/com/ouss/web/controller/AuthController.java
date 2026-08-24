@@ -2,8 +2,9 @@ package com.ouss.web.controller;
 
 import com.google.gson.Gson;
 import com.ouss.web.repository.UserDOA;
-import com.ouss.web.model.Refresh_Token;
+import com.ouss.web.model.RefreshToken;
 import com.ouss.web.model.User;
+import com.ouss.web.service.AuthenticationService;
 import com.ouss.web.service.RefreshTokenService;
 import com.ouss.web.service.TokenService;
 import com.ouss.web.service.UserService;
@@ -12,9 +13,6 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseCookie;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
 import org.springframework.util.MultiValueMap;
 import org.springframework.web.bind.annotation.*;
 
@@ -38,16 +36,12 @@ public class AuthController {
     UserService userService;
 
     @Autowired
-    AuthenticationManager authenticationManager;
+    AuthenticationService authenticationService;
 
     @PostMapping("/login")
     public ResponseEntity<String> authenticateUser(@RequestBody User user) {
-        Authentication authentication = authenticationManager.authenticate
-                (new UsernamePasswordAuthenticationToken(user.getEmail(), user.getPassword()));
-        User userFound = userDOA.getUser(user.getEmail());
-        userFound.setAccessToken(tokenService.generateToken(authentication));
-        String refreshToken = refreshTokenService.generateToken(String.valueOf(userFound.getId()));
-        userFound.setPassword("");
+        User authenticatedUser = authenticationService.authenticateUser(user);
+        String refreshToken = refreshTokenService.generateToken(String.valueOf(authenticatedUser.getId()));
         ResponseCookie cookie = ResponseCookie.from("refreshToken", refreshToken)
                 .httpOnly(true)
                 .path("/")
@@ -55,7 +49,7 @@ public class AuthController {
                 .build();
         HttpHeaders headers = new HttpHeaders(MultiValueMap.fromSingleValue(Map.of(HttpHeaders.SET_COOKIE, cookie.toString())));
         final var gson = new Gson();
-        return new ResponseEntity<>(gson.toJson(userFound), headers, HttpStatus.OK);
+        return new ResponseEntity<>(gson.toJson(authenticatedUser), headers, HttpStatus.OK);
     }
 
     @PostMapping("/logout")
@@ -77,13 +71,13 @@ public class AuthController {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        Refresh_Token oldRefreshToken = refreshTokenService.getRefreshToken(refreshToken);
+        RefreshToken oldRefreshToken = refreshTokenService.getRefreshToken(refreshToken);
 
         if(oldRefreshToken == null ||  oldRefreshToken.getRefreshToken().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);
         }
 
-        Refresh_Token newRefreshToken = refreshTokenService.validateRefreshToken(refreshToken);
+        RefreshToken newRefreshToken = refreshTokenService.validateRefreshToken(refreshToken);
 
         if(newRefreshToken == null || newRefreshToken.getRefreshToken().isEmpty()) {
             return new ResponseEntity<>(HttpStatus.UNAUTHORIZED);

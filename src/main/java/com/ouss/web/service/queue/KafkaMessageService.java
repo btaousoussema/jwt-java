@@ -13,7 +13,7 @@ public class KafkaMessageService implements MessageService {
     private KafkaTemplate<String, String> kafkaProducer;
 
     @Override
-    public void sendAccountCreation(String email) {
+    public void sendEmailAccountCreation(String email) {
         if(email == null) return;
         kafkaProducer.send(new ProducerRecord<>("accountcreated", email));
     }

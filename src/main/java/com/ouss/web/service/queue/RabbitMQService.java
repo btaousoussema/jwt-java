@@ -13,7 +13,7 @@ public class RabbitMQService implements MessageService {
     private RabbitTemplate rabbitTemplate;
 
     @Override
-    public void sendAccountCreation(String email) {
+    public void sendEmailAccountCreation(String email) {
         if(email == null) return;
         rabbitTemplate.convertAndSend("emails", email);
     }

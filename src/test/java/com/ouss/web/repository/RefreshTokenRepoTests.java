@@ -1,6 +1,6 @@
 package com.ouss.web.repository;
 
-import com.ouss.web.model.Refresh_Token;
+import com.ouss.web.model.RefreshToken;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -20,7 +20,7 @@ public class RefreshTokenRepoTests {
 
     @Test
     public void insertRefreshTokenTest() {
-        final var refreshToken = Refresh_Token.builder()
+        final var refreshToken = RefreshToken.builder()
                 .refreshToken(UUID.randomUUID().toString())
                 .active(true)
                 .expires_in(new Date(System.currentTimeMillis()))
@@ -37,7 +37,7 @@ public class RefreshTokenRepoTests {
 
     @Test
     public void getInsertedRefreshTokenWithIdTest() {
-        final var refreshToken = Refresh_Token.builder()
+        final var refreshToken = RefreshToken.builder()
                 .refreshToken(UUID.randomUUID().toString())
                 .active(true)
                 .expires_in(new Date(System.currentTimeMillis()))
@@ -57,7 +57,7 @@ public class RefreshTokenRepoTests {
 
     @Test
     public void getRefreshTokenWithTokenTest() {
-        final var refreshToken = Refresh_Token.builder()
+        final var refreshToken = RefreshToken.builder()
                 .refreshToken(UUID.randomUUID().toString())
                 .active(true)
                 .userId("1")

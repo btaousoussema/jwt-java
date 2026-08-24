@@ -2,7 +2,7 @@ package com.ouss.web.service;
 
 import com.ouss.web.config.SecretConfig;
 import com.ouss.web.repository.RefreshTokenJpaRepo;
-import com.ouss.web.model.Refresh_Token;
+import com.ouss.web.model.RefreshToken;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
@@ -18,8 +18,8 @@ public class RefreshTokenService {
     @Autowired
     SecretConfig secretConfig;
 
-    public Refresh_Token validateRefreshToken(String token) {
-        Refresh_Token refreshToken = refreshTokenRepo.findByRefreshToken(token).orElse(null);
+    public RefreshToken validateRefreshToken(String token) {
+        RefreshToken refreshToken = refreshTokenRepo.findByRefreshToken(token).orElse(null);
         if(refreshToken == null) {
             return null;
         }
@@ -48,7 +48,7 @@ public class RefreshTokenService {
 
     public String generateToken(String userId) {
         String token = UUID.randomUUID().toString();
-        final var refreshToken = Refresh_Token.builder()
+        final var refreshToken = RefreshToken.builder()
                 .userId(userId)
                 .refreshToken(token)
                 .active(true)
@@ -57,9 +57,9 @@ public class RefreshTokenService {
         return token;
     }
 
-    public Refresh_Token generateRefreshToken(String userId) {
+    public RefreshToken generateRefreshToken(String userId) {
         String token = UUID.randomUUID().toString();
-        Refresh_Token refreshToken = new Refresh_Token();
+        RefreshToken refreshToken = new RefreshToken();
         refreshToken.setRefreshToken(token);
         refreshToken.setUserId(userId);
         refreshToken.setActive(true);
@@ -67,7 +67,7 @@ public class RefreshTokenService {
         return refreshToken;
     }
 
-    public Refresh_Token getRefreshToken(String refreshToken) {
+    public RefreshToken getRefreshToken(String refreshToken) {
         return refreshTokenRepo.findByRefreshToken(refreshToken).orElse(null);
     }
 }

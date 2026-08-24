@@ -1,6 +1,6 @@
 package com.ouss.web.repository;
 
-import com.ouss.web.model.Refresh_Token;
+import com.ouss.web.model.RefreshToken;
 import com.ouss.web.model.User;
 import com.ouss.web.util.DatabaseConnection;
 import org.slf4j.Logger;
@@ -51,7 +51,7 @@ public class RefreshTokenRepo {
         return null;
     }
 
-    public Refresh_Token getRefreshToken(String token) {
+    public RefreshToken getRefreshToken(String token) {
         try {
             Connection conn = DatabaseConnection.getConnection();
             String sql = "SELECT * FROM refresh_token WHERE token = ? and active = true";
@@ -62,7 +62,7 @@ public class RefreshTokenRepo {
 
             if(stmt.getResultSet().next()) {
                 try {
-                    Refresh_Token refreshToken = new Refresh_Token(stmt.getResultSet().getInt(1), stmt.getResultSet().getString(2), stmt.getResultSet().getString(3),
+                    RefreshToken refreshToken = new RefreshToken(stmt.getResultSet().getInt(1), stmt.getResultSet().getString(2), stmt.getResultSet().getString(3),
                            formatter.parse(stmt.getResultSet().getString(4)), stmt.getResultSet().getBoolean(5));
                     return refreshToken;
                 } catch (ParseException e) {
