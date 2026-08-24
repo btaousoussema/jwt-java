@@ -18,11 +18,6 @@ public class TokenService {
     @Autowired
     SecretConfig secretConfig;
 
-
-    /*public String generateToken(User user){
-        return generateToken(String.valueOf(user.getId()), 0);
-    }*/
-
     public String generateToken(String userId, int time){
         Algorithm algorithm = Algorithm.HMAC256(secretConfig.getKey());
         return JWT.create()
