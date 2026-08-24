@@ -16,7 +16,6 @@ public class RefreshToken {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     int id;
-    //@JoinColumn(name = "users", referencedColumnName = "id")
     String userId;
     String refreshToken;
     Date expires_in;

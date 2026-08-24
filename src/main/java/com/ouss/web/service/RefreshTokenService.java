@@ -17,6 +17,7 @@ public class RefreshTokenService {
 
     @Autowired
     SecretConfig secretConfig;
+    private RefreshToken refreshToken;
 
     public RefreshToken validateRefreshToken(String token) {
         RefreshToken refreshToken = refreshTokenRepo.findByRefreshToken(token).orElse(null);
@@ -42,27 +43,18 @@ public class RefreshTokenService {
         var refreshToken = refreshTokenRepo.findByRefreshToken(token);
         if(refreshToken.isPresent()) {
             refreshToken.get().setActive(false);
-            //refreshTokenRepo.delete(refreshToken);
+            refreshTokenRepo.save(refreshToken.get());
         }
     }
 
-    public String generateToken(String userId) {
+    public RefreshToken generateRefreshToken(String userId) {
         String token = UUID.randomUUID().toString();
         final var refreshToken = RefreshToken.builder()
                 .userId(userId)
                 .refreshToken(token)
                 .active(true)
+                .expires_in(new Date(System.currentTimeMillis() + 300000))
                 .build();
-        refreshTokenRepo.save(refreshToken);
-        return token;
-    }
-
-    public RefreshToken generateRefreshToken(String userId) {
-        String token = UUID.randomUUID().toString();
-        RefreshToken refreshToken = new RefreshToken();
-        refreshToken.setRefreshToken(token);
-        refreshToken.setUserId(userId);
-        refreshToken.setActive(true);
         refreshTokenRepo.save(refreshToken);
         return refreshToken;
     }

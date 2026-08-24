@@ -10,14 +10,10 @@ import java.util.List;
 @Service
 public class ContactService {
 
-    /*@Autowired
-    ContactRepo contactRepo;*/
-
     @Autowired
     ContactJpaRepo contactJpaRepo;
 
     public List<Contact> getAllContacts() {
-        //return contactRepo.getAllContacts();
         return contactJpaRepo.findAll();
     }
 

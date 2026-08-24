@@ -1,6 +1,7 @@
 package com.ouss.web.controller;
 
 import com.google.gson.Gson;
+import com.ouss.web.model.RefreshToken;
 import com.ouss.web.model.User;
 import com.ouss.web.repository.UserDOA;
 import com.ouss.web.security.AuthTokenFilter;
@@ -68,9 +69,11 @@ class AuthControllerTest {
         when(authenticationManager.authenticate(any())).thenReturn(null);
 
         String accessToken = UUID.randomUUID().toString();
-        String refreshToken = UUID.randomUUID().toString();
+        RefreshToken refreshToken = RefreshToken.builder()
+                .refreshToken(UUID.randomUUID().toString())
+                .build();
         when(tokenService.generateToken(any())).thenReturn(accessToken);
-        when(refreshTokenService.generateToken(anyString())).thenReturn(refreshToken);
+        when(refreshTokenService.generateRefreshToken(anyString())).thenReturn(refreshToken);
 
         var user = new User(5, "ouss@gy.com", "bou");
         when(authenticationService.authenticateUser(any())).thenReturn(user);
