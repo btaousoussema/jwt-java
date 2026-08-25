@@ -19,9 +19,6 @@ public class CustomUserDetailsService implements UserDetailsService {
     UserDOA userDOA;
 
     @Autowired
-    TokenService tokenService;
-
-    @Autowired
     MessageService messageService;
 
     private static final BCryptPasswordEncoder encoder = new BCryptPasswordEncoder();

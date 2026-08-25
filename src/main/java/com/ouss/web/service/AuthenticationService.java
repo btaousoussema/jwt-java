@@ -18,11 +18,7 @@ public class AuthenticationService {
     UserDOA userDOA;
 
     @Autowired
-    UserService userService;
-
-    @Autowired
     AuthenticationManager authenticationManager;
-
 
     public User authenticateUser(User user) {
         Authentication authentication = authenticationManager.authenticate

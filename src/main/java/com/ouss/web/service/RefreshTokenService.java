@@ -1,6 +1,5 @@
 package com.ouss.web.service;
 
-import com.ouss.web.config.SecretConfig;
 import com.ouss.web.repository.RefreshTokenJpaRepo;
 import com.ouss.web.model.RefreshToken;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,10 +14,6 @@ public class RefreshTokenService {
     @Autowired
     private RefreshTokenJpaRepo refreshTokenRepo;
 
-    @Autowired
-    SecretConfig secretConfig;
-    private RefreshToken refreshToken;
-
     public RefreshToken validateRefreshToken(String token) {
         RefreshToken refreshToken = refreshTokenRepo.findByRefreshToken(token).orElse(null);
         if(refreshToken == null) {
@@ -32,7 +27,9 @@ public class RefreshTokenService {
         }
 
         if(refreshToken.getExpires_in().after(new Date(System.currentTimeMillis()))) {
-            refreshTokenRepo.getReferenceById(refreshToken.getId()).setActive(false);
+            var expiredRefreshToken = refreshTokenRepo.getReferenceById(refreshToken.getId());
+            expiredRefreshToken.setActive(false);
+            refreshTokenRepo.save(expiredRefreshToken);
             //refreshTokenRepo.invalidateRefreshToken(token);
             return generateRefreshToken(refreshToken.getUserId());
         }
