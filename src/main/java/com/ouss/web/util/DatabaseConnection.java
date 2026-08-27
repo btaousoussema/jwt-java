@@ -1,6 +1,7 @@
 package com.ouss.web.util;
 
 import io.github.cdimascio.dotenv.Dotenv;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 import java.sql.Connection;
@@ -8,6 +9,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 @Component
+@Profile("!test")
 public class DatabaseConnection {
     private static Connection connection = null;
 

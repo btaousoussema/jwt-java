@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import java.sql.Date;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.UUID;
 
 @Component
@@ -26,7 +28,7 @@ public class RefreshTokenService {
             return null;
         }
 
-        if(refreshToken.getExpires_in().after(new Date(System.currentTimeMillis()))) {
+        if(refreshToken.getExpires_at().after(new Date(System.currentTimeMillis()))) {
             var expiredRefreshToken = refreshTokenRepo.getReferenceById(refreshToken.getId());
             expiredRefreshToken.setActive(false);
             refreshTokenRepo.save(expiredRefreshToken);
@@ -50,7 +52,7 @@ public class RefreshTokenService {
                 .userId(userId)
                 .refreshToken(token)
                 .active(true)
-                .expires_in(new Date(System.currentTimeMillis() + 300000))
+                .expires_at(Timestamp.from(Instant.ofEpochSecond(System.currentTimeMillis() + 300000)))
                 .build();
         refreshTokenRepo.save(refreshToken);
         return refreshToken;

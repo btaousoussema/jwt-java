@@ -1,0 +1,10 @@
+GRANT ALL ON SCHEMA public TO ouss;
+DROP TABLE IF EXISTS users;
+DROP TABLE IF EXISTS contact;
+CREATE TABLE users (id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY, email text, password text);
+CREATE TABLE contact (id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY, first_name text, last_name text);
+CREATE TABLE refresh_token (id int PRIMARY KEY GENERATED ALWAYS AS IDENTITY, user_id text, refresh_token text, expires_at text, active boolean);
+GRANT SELECT, INSERT, UPDATE ON users TO ouss;
+GRANT SELECT, INSERT, UPDATE ON contact TO ouss;
+GRANT SELECT, INSERT, UPDATE ON REFRESH_TOKEN TO ouss;
+Insert into contact (first_name, last_name) values ('ouss', 'bou');

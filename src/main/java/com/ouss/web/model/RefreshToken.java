@@ -3,7 +3,7 @@ package com.ouss.web.model;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.util.Date;
+import java.sql.Timestamp;
 
 @AllArgsConstructor
 @Entity
@@ -18,7 +18,7 @@ public class RefreshToken {
     int id;
     String userId;
     String refreshToken;
-    Date expires_in;
+    Timestamp expires_at;
     boolean active;
 }
 

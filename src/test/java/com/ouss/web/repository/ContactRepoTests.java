@@ -1,19 +1,25 @@
 package com.ouss.web.repository;
 
+import com.ouss.web.BaseIntegrationTest;
 import com.ouss.web.model.Contact;
+import jakarta.transaction.Transactional;
 import org.assertj.core.api.Assertions;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.data.jpa.test.autoconfigure.DataJpaTest;
-import org.springframework.boot.jdbc.EmbeddedDatabaseConnection;
-import org.springframework.boot.jdbc.test.autoconfigure.AutoConfigureTestDatabase;
 
-@DataJpaTest
-@AutoConfigureTestDatabase(connection = EmbeddedDatabaseConnection.H2)
-public class ContactRepoTests {
+@Transactional
+public class ContactRepoTests extends BaseIntegrationTest {
 
     @Autowired
     private ContactJpaRepo contactRepo;
+
+    @Test
+    public void test() {
+        var contact = contactRepo.findAll().get(0);
+        org.junit.jupiter.api.Assertions.assertEquals(1, contactRepo.findAll().size());
+        org.junit.jupiter.api.Assertions.assertEquals("ouss", contact.getFirstName());
+        org.junit.jupiter.api.Assertions.assertEquals("bou", contact.getLastName());
+    }
 
     @Test
     public void testInsertNewContactTest() {
@@ -53,7 +59,7 @@ public class ContactRepoTests {
         final var contacts = contactRepo.findAll();
 
         Assertions.assertThat(contacts).isNotNull();
-        Assertions.assertThat(contacts.size()).isEqualTo(2);
+        Assertions.assertThat(contacts.size()).isEqualTo(3);
     }
 
     @Test

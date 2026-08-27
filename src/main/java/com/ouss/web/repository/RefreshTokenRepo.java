@@ -8,8 +8,8 @@ import org.slf4j.LoggerFactory;
 import org.springframework.stereotype.Repository;
 
 import java.sql.*;
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.time.Instant;
 import java.util.Date;
 import java.util.Locale;
 
@@ -63,9 +63,9 @@ public class RefreshTokenRepo {
             if(stmt.getResultSet().next()) {
                 try {
                     RefreshToken refreshToken = new RefreshToken(stmt.getResultSet().getInt(1), stmt.getResultSet().getString(2), stmt.getResultSet().getString(3),
-                           formatter.parse(stmt.getResultSet().getString(4)), stmt.getResultSet().getBoolean(5));
+                           Timestamp.from(Instant.parse(stmt.getResultSet().getString(4))), stmt.getResultSet().getBoolean(5));
                     return refreshToken;
-                } catch (ParseException e) {
+                } catch (IllegalArgumentException  e) {
                     logger.error("Parse exception: {}", e.getMessage());
                     return null;
                 }
